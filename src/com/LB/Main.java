@@ -13,26 +13,26 @@ public class Main {
 	public static void main(String args[]) {
 		List<Server> servers = List.of(
 				new Server("http://localhost:8001"),
-				new Server("http://localhost:8082"),
-	            new Server("http://localhost:8083")
+				new Server("http://localhost:8002"),
+	            new Server("http://localhost:8003")
 		);
 		
 		LoadBalancingStrategy leastStrategy = new LeastConnection();
 		LoadBalancingStrategy roundRobinStrategy = new RoundRobin();
 		LoadBalancingStrategy ipHashStrategy = new IPHash();
-		LoadBalancer lb = new LoadBalancer(servers, roundRobinStrategy);
+		LoadBalancer lb = new LoadBalancer(servers, ipHashStrategy, 20);
 		
-//		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-//        scheduler.scheduleAtFixedRate(
-//            new HealthChecker(servers),
-//            0,                // initial delay
-//            10,               // check every 10 seconds
-//            TimeUnit.SECONDS
-//        );
-		
-        for (int i = 0; i < 5; i++) {
-            String clientIp = "192.168.0." + i;
-            lb.forwardRequest(clientIp, "GET /api");
+		Thread healthThread = new Thread(new HealthChecker(servers));
+        healthThread.setDaemon(true);
+        healthThread.start();
+        
+        for (int i = 0; i < 1000; i++) {
+            String clientIp = "192.168.1." + i;
+            lb.forwardRequestAsync(clientIp, "GET /api/data");
         }
+
+        lb.shutdown();
+
+        System.out.println("All requests processed.");
 	}
 }
