@@ -1,0 +1,44 @@
+# Java build directories
+/bin/
+/build/
+/out/
+
+# IDE specific files
+/.idea/
+/*.iml
+/.vscode/
+
+# Eclipse-specific files
+/.settings/
+/.classpath
+/.project
+
+# NetBeans-specific files
+/nbproject/
+
+# IntelliJ-specific files
+/.idea/
+/*.iml
+
+# Maven and Gradle build directories
+/target/
+/.gradle/
+/build/
+
+# Java compiled files
+*.class
+
+# Logs
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Backup files
+*~
+*.bak
+*.swp
+
+# Other
+/.recommenders/
