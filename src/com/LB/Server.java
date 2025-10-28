@@ -1,15 +1,16 @@
 package com.LB;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class Server {
 
 	private String url;
 	private boolean isHealthy;
-	private int activeConnections;
+	private final AtomicInteger activeConnections = new AtomicInteger(0);
 	
 	public Server(String url) {
 		this.url = url;
 		this.isHealthy = true;
-		this.activeConnections = 0;
 	}
 	
 	public String getUrl() {
@@ -21,15 +22,15 @@ public class Server {
 	}
 	
 	public int getActiveConnections() {
-		return activeConnections;
+		return activeConnections.get();
 	}
 	
-	public synchronized void incrementConnections() {
-		activeConnections++;
+	public void incrementConnections() {
+		activeConnections.incrementAndGet();
 	}
 	
-	public synchronized void decrementConnections() {
-		activeConnections--;
+	public void decrementConnections() {
+		activeConnections.decrementAndGet();
 	}
 	
 	public void setHealthy(boolean healthy) {
